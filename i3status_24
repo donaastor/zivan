@@ -1,0 +1,55 @@
+general {
+	output_format = "i3bar"
+	interval = 1
+	separator = " | "
+	colors = true
+	color_good = "#00FF00"
+	color_bad = "#FF0000"
+}
+
+order += "cpu_temperature 0"
+order += "cpu_temperature 1"
+order += "cpu_usage"
+order += "cpu_temperature 2"
+order += "memory"
+order += "disk /"
+order += "time"
+
+disk "/" {
+	format = "disk: %used"
+	prefix_type = "custom"
+}
+
+cpu_usage {
+	format = "cpu: %usage"
+	max_threshold = 80
+	degraded_threshold = 60
+}
+
+cpu_temperature 0 {
+	format = "cpu1: %degrees"
+	max_threshold = 42
+	path = "/tmp/hwmon_cpu/temp3_input"
+}
+
+cpu_temperature 1 {
+	format = "cpu2: %degrees"
+	max_threshold = 42
+	path = "/tmp/hwmon_cpu/temp4_input"
+}
+
+cpu_temperature 2 {
+	format = "gpu: %degrees"
+	max_threshold = 44
+	path = "/sys/class/drm/card0/device/hwmon/hwmon0/temp1_input"
+}
+
+memory {
+	format = "ram: %used/%total"
+	unit = "auto"
+	decimals = 2
+}
+
+time {
+	format = "%a %Y-%m-%d %H:%M:%S"
+}

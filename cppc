@@ -1,0 +1,116 @@
+#!/bin/bash
+CPPC_CMD=("g++")
+CPPC_CONST="-pipe -std=gnu++23 -mcmodel=large -maddress-mode=long -m64"
+declare -a CPPC_ARCH
+declare -a CPPC_I_PATHS
+declare -a CPPC_L_PATHS
+declare -a CPPC_LIBS
+declare -a CPPC_LIBS_STATIC
+declare -a CPPC_DEFINES
+declare -a CPPC_SOURCES
+
+CPPC_F=("-fwrapv" "-fno-plt" "-fno-semantic-interposition")
+CPPC_WARNINGS="-Wshadow -Wno-unused-result -Wall"
+
+# CPPC_ARCH+=("-march=native" "-mtune=native") # optimize for local machine
+# CPPC_ARCH+=("-mabm") # ABM support
+# CPPC_ARCH+=("-mbmi") # BMI support
+# CPPC_ARCH+=("-mbmi2") # BMI2 support
+# CPPC_ARCH+=("-mmovbe") # forcing MOV's
+
+if [ $# -eq 1 ] && [ "$1" == "-l" ]; then
+  # -fPIC -O3
+  CPPC_FINAL_LIB_A=("-O3" "$CPPC_CONST" "${CPPC_ARCH[@]}" "${CPPC_F[@]}" "-fPIC")
+  echo "${CPPC_FINAL_LIB_A[@]}"
+  exit 0
+fi
+
+CPPC_LIBS+=("-lm") # math.h
+CPPC_LIBS+=("-lz") # zlib
+CPPC_LIBS+=("-lrt") # shm_open
+CPPC_LIBS+=("-lcurl") # curl
+CPPC_LIBS+=("-lncurses") # ncurses
+# CPPC_LIBS+=("-ljpgd" "-ljpge") # jpg
+# CPPC_LIBS+=("-lX11" "-lXext" "-lXrender") # X
+# CPPC_LIBS_STATIC+=("-ltomcrypt" "-ltfm") # tomcrypt
+# python "3.10
+# CPPC_I_PATHS+=("-I/usr/include/python3.10"); CPPC_LIBS+=("-lpython3.10")
+# magick
+# CPPC_I_PATHS+=("-I/usr/include/ImageMagick-7"); CPPC_LIBS+=("-lMagick++-7.Q16HDRI" "-lMagickCore-7.Q16HDRI" "-lMagickWand-7.Q16HDRI")
+# mylib
+# CPPC_I_PATHS+=("-I/usr/local/include/mylib");
+
+CPPC_MODE_DEBUG=0
+CPPC_MODE_OBJECT=0
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -d) CPPC_MODE_DEBUG=1;;
+    -o) CPPC_MODE_OBJECT=1;;
+    -do | -od) CPPC_MODE_DEBUG=1; CPPC_MODE_OBJECT=1;;
+    *) if [[ "$1" == "-D"* ]]; then
+         CPPC_DEFINES+=("$1")
+       elif [[ "$1" == "-l"* ]]; then
+         CPPC_LIBS+=("$1")
+       elif [[ "$1" == "-n"* ]]; then
+         if [ -z "$CPPC_OFN" ]; then
+           CPPC_OFN="$1"
+         else
+           echo "You can specify only one output file."
+           exit 2
+         fi
+       else
+         CPPC_SOURCES+=("$1")
+       fi
+       ;;
+  esac
+  shift
+done
+if [ ${#CPPC_SOURCES[@]} -eq 0 ]; then
+  echo "No input files."
+  exit 1
+fi
+if [ -z "$CPPC_OFN" ]; then
+  case "${CPPC_SOURCES[0]}" in
+    *.cpp|*.hpp) CPPC_OFN="${CPPC_SOURCES[0]:0:-4}";;
+    *.c|*.h|*.o|*.a) CPPC_OFN="${CPPC_SOURCES[0]:0:-2}";;
+    *) CPPC_OFN="${CPPC_SOURCES[0]}";;
+  esac
+fi
+for afi in "${!CPPC_SOURCES[@]}"; do
+  case "${CPPC_SOURCES[$afi]}" in
+    *.cpp|*.c|*.hpp|*.h|*.o|*.a)
+      CPPC_SOURCES[$afi]="\"${CPPC_SOURCES[$afi]}\"";;
+    *)
+      CPPC_SOURCES[$afi]="\"${CPPC_SOURCES[$afi]}.cpp\"";;
+  esac
+done
+if [ $CPPC_MODE_OBJECT -eq 1 ]; then
+  CPPC_F+=("-fPIC")
+  CPPC_CMD+=("-c" "${CPPC_SOURCES[@]}" "-o" "\"${CPPC_OFN}.o\"")
+else
+  CPPC_CMD+=("${CPPC_SOURCES[@]}" "-o" "\"$CPPC_OFN\"")
+fi
+if [ $CPPC_MODE_DEBUG -eq 1 ]; then
+  CPPC_CMD+=("-g")
+  CPPC_F+=("-fsanitize=address" "-fsanitize=undefined")
+  CPPC_DEFINES+=("-D_GLIBCXX_DEBUG")
+else
+  CPPC_CMD+=("-O3")
+fi
+CPPC_CMD+=("${CPPC_DEFINES[@]}")
+CPPC_CMD+=("$CPPC_CONST")
+CPPC_CMD+=("${CPPC_ARCH[@]}")
+CPPC_CMD+=("${CPPC_F[@]}")
+CPPC_CMD+=("$CPPC_WARNINGS")
+CPPC_CMD+=("${CPPC_I_PATHS[@]}")
+if [ ${#CPPC_LIBS[@]} -gt 0 ] || [ ${#CPPC_LIBS_STATIC[@]} -gt 0 ]; then
+  CPPC_CMD+=("${CPPC_L_PATHS[@]}")
+  CPPC_CMD+=("-L/usr/lib" "-Wl,--as-needed")
+  CPPC_CMD+=("${CPPC_LIBS[@]}")
+  if [ ${#CPPC_LIBS_STATIC[@]} -gt 0 ]; then
+    CPPC_CMD+=("-Wl,-Bstatic")
+    CPPC_CMD+=("${CPPC_LIBS_STATIC[@]}")
+    CPPC_CMD+=("-Wl,-Bdynamic")
+  fi
+fi
+eval "${CPPC_CMD[@]}"

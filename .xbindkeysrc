@@ -1,0 +1,13 @@
+"xkb-switch -s us"
+	Mod4+KP_Insert
+"xkb-switch -s ru"
+	Mod4+KP_End
+"xkb-switch -s "rs(latin)""
+	Mod4+KP_Down
+"xkb-switch -s "rs(yz)""
+	Mod4+KP_Next
+
+"flameshot gui"
+	Print
+"pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+	Pause
