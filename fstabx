@@ -1,3 +1,5 @@
+
+
 tmpfs /var/cache/pacman/pkg					tmpfs defaults,size=2560M	0 0
 tmpfs /var/lib/systemd/coredump				tmpfs defaults,size=512M	0 0
 tmpfs /root/tren							tmpfs defaults,size=2048M	0 0
