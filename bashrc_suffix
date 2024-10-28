@@ -1,0 +1,47 @@
+sleep() {
+  if [ "$1" = on ]; then
+    if ! pgrep -f xidlehook; then
+      if [ $USER = $username ]; then
+        xidlehook --timer 600 'systemctl suspend -i' '' &
+      else
+        sudo -u $username xidlehook --timer 600 'systemctl suspend -i' '' &
+      fi
+    fi
+  elif [ "$1" = off ]; then
+    pkill xidlehook
+  else
+    echo "wrong parameter"
+  fi
+}
+vol() {
+  if [ -z "$1" ]; then
+    pactl get-sink-volume @DEFAULT_SINK@
+  else
+    pactl set-sink-volume @DEFAULT_SINK@ $1%
+  fi
+}
+gpf() {
+  local dflt=104
+  bash /opt/gpu_fan $dflt $1
+}
+
+
+export HISTFILE=/tmp/root_bash_history
+export HISTFILESIZE=10000
+export HISTSIZE=10000
+export PYTHONSTARTUP=/usr/local/etc/.pythonrc
+export LESSHISTFILE=-
+export CALCHISTFILE=/tmp/calc_history
+export LESS=-x4
+
+alias ls='ls --color=tty --group-directories-first'
+alias lsa='ls -la'
+alias ip='ip -color=auto'
+alias cal='cal -m3'
+alias q='exit'
+alias cl='clear'
+alias stfu='shutdown now'
+alias sus='systemctl suspend'
+alias cdf='cd /home/korsic/tren'
+
+tabs 4
