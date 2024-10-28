@@ -1,0 +1,9 @@
+[Unit]
+Description=Increase VRAM clock
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/gpu_mclk
+
+[Install]
+WantedBy=multi-user.target
