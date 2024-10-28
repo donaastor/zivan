@@ -131,6 +131,7 @@ modprobe fuse
 cd /tmp
 git clone https://github.com/donaastor/zivan.git
 cd zivan
+7z x geany.7z
 chown USERNAME:wheel .xinitrc poz.jpg .xbindkeysrc config status_script.sh i3status
 chmod 755 gpu_mclk gpu_fan cppc ejex numlock status_script.sh
 . /tmp/zivan/aur_get.sh
