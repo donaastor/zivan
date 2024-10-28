@@ -1,0 +1,10 @@
+[Unit]
+Description=Turning on GPU fans
+After=suspend.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/gpu_fan
+
+[Install]
+WantedBy=multi-user.target suspend.target
