@@ -301,6 +301,11 @@ nakon sto bootujemo u arch live, radimo:
 		za prikaz svih kompajlovanih locales: localedef --list-archive
 		za listanje "available" locala: localectl list-locales
 
+12. 7zip
+	archive:	7z a -p*** -mhe=on -mx=9 out.7z files...
+	archive:	7z a -mx=9 out.7z files...
+	extract:	7z x in.7z
+
 --------------- SETUP ---------------
 
 	konfigurisi:
