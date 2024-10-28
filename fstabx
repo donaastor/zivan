@@ -1,13 +1,11 @@
-
-
 tmpfs /var/cache/pacman/pkg					tmpfs defaults,size=2560M	0 0
 tmpfs /var/lib/systemd/coredump				tmpfs defaults,size=512M	0 0
 tmpfs /root/tren							tmpfs defaults,size=2048M	0 0
-tmpfs /home/usernm/tren						tmpfs defaults,size=2048M	0 0
-tmpfs /home/usernm/.local/share/xorg		tmpfs defaults,size=1280M	0 0
-tmpfs /home/usernm/.cargo					tmpfs defaults,size=640M	0 0
-tmpfs /home/usernm/.cache/fontconfig		tmpfs defaults,size=512M	0 0
-tmpfs /home/usernm/.cache/mesa_shader_cache	tmpfs defaults,size=1024M	0 0
-tmpfs /home/usernm/.cache/pip				tmpfs defaults,size=2560M	0 0
-tmpfs /home/usernm/.cache/thumbnails		tmpfs defaults,size=512M	0 0
-tmpfs /home/usernm/.cache/babl				tmpfs defaults,size=256M	0 0
+tmpfs /home/korsic/tren						tmpfs defaults,size=2048M	0 0
+tmpfs /home/korsic/.local/share/xorg		tmpfs defaults,size=1280M	0 0
+tmpfs /home/korsic/.cargo					tmpfs defaults,size=640M	0 0
+tmpfs /home/korsic/.cache/fontconfig		tmpfs defaults,size=512M	0 0
+tmpfs /home/korsic/.cache/mesa_shader_cache	tmpfs defaults,size=1024M	0 0
+tmpfs /home/korsic/.cache/pip				tmpfs defaults,size=2560M	0 0
+tmpfs /home/korsic/.cache/thumbnails		tmpfs defaults,size=512M	0 0
+tmpfs /home/korsic/.cache/babl				tmpfs defaults,size=256M	0 0

@@ -1,0 +1,13 @@
+
+export HISTFILE=/tmp/korsic_bash_history
+
+if ! [ -d /tmp/geany-conf ]; then
+  mkdir /tmp/geany-conf
+  cp -r /home/korsic/.config/geany-base/* /tmp/geany-conf/
+fi
+
+mkdir -p /tmp/zathura-data
+
+if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
+  startx
+fi
