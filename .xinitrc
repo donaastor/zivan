@@ -19,7 +19,7 @@ xbindkeys &
 if ! pgrep -f xidlehook; then
   xidlehook --timer 600 'systemctl suspend -i' '' &
 fi
-picom --experimental-backends &
+picom &
 export QT_SCREEN_SCALE_FACTORS=1.5
 nitrogen --restore &
 exec i3
