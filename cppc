@@ -30,8 +30,8 @@ CPPC_LIBS+=("-lz") # zlib
 CPPC_LIBS+=("-lrt") # shm_open
 CPPC_LIBS+=("-lcurl") # curl
 CPPC_LIBS+=("-lncurses") # ncurses
-# CPPC_LIBS+=("-ljpeg") # jpg
-# CPPC_LIBS+=("-lX11" "-lXext" "-lXrender") # X
+CPPC_LIBS+=("-ljpeg") # jpg
+CPPC_LIBS+=("-lX11" "-lXext" "-lXrender") # X
 # CPPC_LIBS_STATIC+=("-ltomcrypt" "-ltfm") # tomcrypt
 # python "3.10
 # CPPC_I_PATHS+=("-I/usr/include/python3.12"); CPPC_LIBS+=("-lpython3.12")
