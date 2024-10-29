@@ -1,3 +1,12 @@
+GPU fan & temp:
+
+	cd /sys/class/drm/card1/device/hwmon/hwmon0/
+	cat temp1_input
+	echo 1 > pwm1_enable
+	echo 104 > pwm1			# ovo je 0-254
+
+--------  krece instalacija  --------
+
 0. bootujemo u arch live
 1. proveravamo imamo li internet:
 	ping archlinux.org
@@ -40,16 +49,14 @@ mount -o defaults,noatime "PART_1" /mnt/efi
 
 pacman -Syy
 pacman -S --noconfirm archlinux-keyring
+rm -rf /mnt/var/cache/pacman/pkg/*
+mount -t tmpfs tmpfs -o defaults,size=2560M /mnt/var/cache/pacman/pkg
 pacstrap /mnt base linux linux-firmware
 mkdir /mnt/root/tren
 mount -t tmpfs tmpfs -o defaults,size=128M /mnt/root/tren
-genfstab -U /mnt >> /mnt/root/tren/fstab_radni
+genfstab -U /mnt >> /mnt/root/tren/fstab
 cd /
 arch-chroot /mnt /bin/bash
-
-mkdir -p /var/cache/pacman/pkg
-rm -rf /var/cache/pacman/pkg/*
-mount -t tmpfs tmpfs -o defaults,size=2560M /var/cache/pacman/pkg
 
 passwd
 useradd -mg wheel "USERNAME"
@@ -59,8 +66,8 @@ cd /etc
 sed -i 's/^#Color/Color/' pacman.conf
 sed -i 's/#en_US.UTF-8/en_US.UTF-8/' locale.gen
 locale-gen
-echo "LANG=en_US.UTF-8" >> locale.conf
-echo arch >> hostname
+echo "LANG=en_US.UTF-8" > locale.conf
+echo arch > hostname
 ln -sf /usr/share/zoneinfo/Europe/Belgrade localtime
 
 pacman -S --needed networkmanager grub nano base-devel efibootmgr amd-ucode
@@ -68,33 +75,27 @@ rm -rf /var/cache/pacman/pkg/*
 
 EDIT nanorc:
 	set zap
-	tabsize 4
+	set tabsize 4
 
 EDIT sudoers:
-	%sudo
+	%sudo ALL=(ALL:ALL) ALL
 groupadd sudo
-gpasswd -a $username sudo
+gpasswd -a USERNAME sudo
 
 mkdir -p NetworkManager/conf.d
 EDIT NetworkManager/conf.d/dns.conf:
 	[main]
 	dns=none
 systemctl enable NetworkManager
-EDIT /etc/resolv.conf:
-	nameserver 80.67.169.40
-	nameserver 80.67.169.12
-	nameserver 217.182.198.203
-	nameserver 62.210.136.158
 
 cd /root/tren
 curl https://raw.githubusercontent.com/donaastor/zivan/refs/heads/main/fstabx > fstabx
 sed -i 's/usernm/USERNAME/' fstabx
-cat fstabx >> fstab_radni
-cp fstab_radni /etc/fstab
+cat fstabx >> fstab
+cp fstab /etc/
 
 cd /home/USERNAME
 sudo -u USERNAME mkdir -p tren media docs .cargo .config{,/nitrogen,/i3,/libfm} .cache .local{,/share} .cache/{fontconfig,mesa_shader_cache,pip,thumbnails,babl}
-mkdir /var/lib/systemd/coredump
 cd /tmp
 
 EDIT /etc/systemd/journald.conf:
@@ -120,11 +121,18 @@ EDIT /etc/systemd/system/getty@tty1.service.d/autologin.conf:
 	Type=simple
 
 exit
+
+EDIT /etc/resolv.conf:
+	nameserver 80.67.169.40
+	nameserver 80.67.169.12
+	nameserver 217.182.198.203
+	nameserver 62.210.136.158
+
 reboot
 
 timedatectl set-ntp true
 
-pacman -S --needed linux-headers dkms mesa libglvnd libva xf86-video-amdgpu vulkan-tools mesa-utils libva-utils libva-vdpau-driver libvdpau-va-gl git xorg-server xorg-xinit xorg-xrdb xorg-xinput numlockx xbindkeys i3-gaps i3status i3lock nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit alacritty xdg-utils man-db man-pages nnn htop zip unzip p7zip ufw lshw usbutils smartmontools exfatprogs bc openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins gimp torsocks python python-pip inetutils fuse3 imagemagick ffmpeg libjpeg-turbo texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science texlive-fontsextra
+pacman -S --needed linux-headers dkms mesa libglvnd libva xf86-video-amdgpu vulkan-tools mesa-utils libva-utils libva-vdpau-driver libvdpau-va-gl git xorg-server xorg-xinit xorg-xrdb xorg-xinput numlockx xbindkeys i3-gaps i3status i3lock nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit wezterm xdg-utils man-db man-pages nnn htop zip unzip p7zip ufw lshw usbutils smartmontools exfatprogs bc openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins gimp torsocks python python-pip inetutils fuse3 imagemagick ffmpeg libjpeg-turbo texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science ttf-dejavu
 
 modprobe fuse
 
@@ -132,30 +140,27 @@ cd /tmp
 git clone https://github.com/donaastor/zivan.git
 cd zivan
 7z x geany.7z
-chown USERNAME:wheel .xinitrc poz.jpg .xbindkeysrc config status_script.sh i3status
+chown -R USERNAME:wheel .xinitrc poz.jpg .xbindkeysrc config status_script.sh i3status geany
 chmod 755 gpu_mclk gpu_fan cppc ejex numlock status_script.sh
-. /tmp/zivan/aur_get.sh
 
-sudo -u USERNAME aurget simplescreenrecorder xidlehook xkb-switch-i3 xkblayout-state-git zenpower3-dkms zenmonitor3-git librewolf-bin
+sudo -u USERNAME bash
+. aur_get.sh
+aurget simplescreenrecorder xidlehook xkb-switch-i3 xkblayout-state-git zenpower3-dkms zenmonitor3-git librewolf-bin
+exit
 modprobe zenpower
-
-rm /root/.bash_profile
 
 sensors-detect --auto
 cd /tmp/zivan
 mv gpu_mclk gpu_fan /opt/
 mv gpu_mclk.service gpu_fan.service /etc/systemd/system/
 systemctl enable gpu_mclk gpu_fan
-cat /tmp/zivan/bashrc_suffix >> /etc/bash.bashrc
+sed -i 's/usernm/USERNAME/' bashrc_suffix
+cat bashrc_suffix >> /etc/bash.bashrc
 
 printf "blacklist pcspkr\n" > /etc/modprobe.d/nobeep.conf
 EDIT /etc/xdg/picom.conf:
-	#fade-in-step
-	#fade-out-step
-	#no-fading-openclose
+	shadows = false;
 	fading = false;
-	popup_menu = { ... opacity = 0.93; }
-	dropdown_menu = { ... opacity = 0.93; }
 cd /home/USERNAME
 EDIT as USERNAME .Xresources:
 	Xft.dpi: 192
@@ -168,6 +173,7 @@ EDIT as USERNAME .config/nitrogen/bg-saved.cfg:
 	bgcolor=#000000
 
 sed 's/^alias ls.*$//' /home/USERNAME/.bashrc > /tmp/brct
+sed -i 's/usernm/USERNAME/' /tmp/zivan/bashrc_user_suffix
 cat /tmp/zivan/bashrc_user_suffix >> /tmp/brct
 chown USERNAME:wheel /tmp/brct
 cp /tmp/brct /home/USERNAME/.bashrc
@@ -188,27 +194,24 @@ localectl --no-convert set-x11-keymap us,ru,rs,rs pc105 ,,latin,yz
 
 cd /tmp/zivan
 mv .xbindkeysrc /home/USERNAME/
-mv config status_script.sh /home/USERNAME/.config/i3/
-mv i3status /home/$username/.config/i3/
+mv config i3status status_script.sh /home/USERNAME/.config/i3/
+mv local.conf /etc/fonts/
+mv cppc ejex /usr/local/bin/
+mv poz.jpg /home/USERNAME/media/
+mv geany /home/USERNAME/.config/geany-base
+ln -s /tmp/geany-conf /home/USERNAME/.config/geany
+mv libfm.conf /home/USERNAME/.config/libfm/
 
 cppc kbswtb
 mv kbswtb /opt/
 
 mandb
 
-mv local.conf /etc/fonts/
-
 systemctl start ufw
 systemctl enable ufw
 ufw default allow outgoing
 ufw default deny incoming
 ufw enable
-
-mv cppc ejex /usr/local/bin/
-mv poz.jpg /home/USERNAME/media/
-mv geany /home/USERNAME/.config/geany-base
-ln -s /tmp/geany-conf /home/USERNAME/.config/geany
-mv libfm.conf /home/USERNAME/.config/libfm/
 
 EDIT /etc/systemd/system/getty@tty1.service.d/autologin.conf:
 	[Service]
@@ -219,22 +222,7 @@ EDIT /etc/systemd/system/getty@tty1.service.d/autologin.conf:
 
 reboot
 
-pactl set-sink-volume @DEFAULT_SINK@ 100%
-
-
-
-----------   ovo nastavi rucno
-
-------   gimp
-
-gimp:
-	Preferences -> Interface -> Icon Theme -> Custom icon size: large
-	(i ako to nije dovoljno:)
-iskopiraj folder Dark iz /usr/share/gimp/2.0/themes u ~/.config/GIMP/2.10/themes/ i preimenuj ga u DarkHighDPI
-u DarkHighDPI/gtkrc otkomentiraj linije:
-	gtk-font-name = "Sans 13"
-	  font_name = "Sans 13"
-gimp:
-	Preferences > Interface > Theme: DarkHighDPI
-
+vol
+vol 100
+vol
 
