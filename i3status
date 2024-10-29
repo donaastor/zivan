@@ -41,7 +41,7 @@ cpu_temperature 1 {
 cpu_temperature 2 {
 	format = "gpu: %degrees"
 	max_threshold = 44
-	path = "/sys/class/drm/card0/device/hwmon/hwmon0/temp1_input"
+	path = "/sys/class/drm/card1/device/hwmon/hwmon0/temp1_input"
 }
 
 memory {
