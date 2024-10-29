@@ -43,7 +43,7 @@ pisi() {
     printf "$1" | sudo tee "$2" 1> /dev/null
   fi
 }
-GPUL=/sys/class/drm/card0/device/hwmon/hwmon0/pwm1
+GPUL=/sys/class/drm/card1/device/hwmon/hwmon0/pwm1
 if [ -z "$1" ]; then
   pisi 1 ${GPUL}_enable
 fi
