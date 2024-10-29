@@ -18,8 +18,8 @@ aurget_one() {
     if [ -e tren4 ]; then
       local dpd_list="$(tr '\n' ' ' < tren4)"
       rm tren4
-      if ! sudo pacman -S --noconfirm --needed $dpd_list; then
-        echo "Sorry, pacman failed. Aborting.\n"
+      if ! sudo pacman -S --needed $dpd_list; then
+        echo "    Sorry, pacman failed. Aborting."
         return 1
       fi
     fi
@@ -29,14 +29,14 @@ aurget_one() {
     sed 's/^.*\(................\)$/\1/' tren2 > tren3
     while read ano_pgp; do
       if ! gpg --recv-keys $ano_pgp; then
-        echo "Sorry, gpg failed. Aborting.\n"
+        echo "    Sorry, gpg failed. Aborting."
         return 1
       fi
     done < tren3
     rm tren1 tren2 tren3
     # local pdpdl="$(tr '\n' ' ' < tren6)"
-    if ! sudo makepkg -do; then
-      echo "Sorry, makepkg failed. Aborting.\n"
+    if ! makepkg -do; then
+      echo "    Sorry, makepkg failed. Aborting."
       return 1
     fi
     makepkg -e
@@ -44,22 +44,22 @@ aurget_one() {
     local pkg_name="$(sed -n '1p' tren5)"
     rm tren5
     if ! sudo pacman -U --noconfirm --needed --verbose "$pkg_name"; then
-      echo "Sorry, pacman failed. Aborting.\n"
+      echo "    Sorry, pacman failed. Aborting."
       return 1
     fi
     rm -rf /tmp/aur_repos/*
-    echo "Success.\n"
+    echo "    Success."
   fi
 }
 
 aurget() {
   if [ "$EUID" -eq 0 ]; then
-    echo "    You shouldn't run this command as root. Aborting.\n"
+    echo "    You shouldn't run this command as root. Aborting."
     return 1
   fi
   if ! [ -d /tmp/aur_repos ]; then mkdir /tmp/aur_repos; fi
   if ! [ -d /tmp/aur_repos ]; then
-    echo "    Sorry, can't create /tmp/aur_repos. Aborting.\n"
+    echo "    Sorry, can't create /tmp/aur_repos. Aborting."
     return 1
   fi
   while (( $# )); do
