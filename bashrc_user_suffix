@@ -1,9 +1,9 @@
 
-export HISTFILE=/tmp/korsic_bash_history
+export HISTFILE=/tmp/usernm_bash_history
 
 if ! [ -d /tmp/geany-conf ]; then
   mkdir /tmp/geany-conf
-  cp -r /home/korsic/.config/geany-base/* /tmp/geany-conf/
+  cp -r /home/usernm/.config/geany-base/* /tmp/geany-conf/
 fi
 
 mkdir -p /tmp/zathura-data
