@@ -132,7 +132,7 @@ reboot
 
 timedatectl set-ntp true
 
-pacman -S --needed linux-headers dkms mesa libglvnd libva xf86-video-amdgpu vulkan-tools mesa-utils libva-utils libva-vdpau-driver libvdpau-va-gl git xorg-server xorg-xinit xorg-xrdb xorg-xinput numlockx xbindkeys i3-gaps i3status i3lock nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit wezterm xdg-utils man-db man-pages nnn htop zip unzip p7zip ufw lshw usbutils smartmontools exfatprogs bc openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins gimp torsocks python python-pip inetutils fuse3 imagemagick ffmpeg libjpeg-turbo texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science ttf-dejavu
+pacman -S --needed linux-headers dkms mesa libglvnd libva xf86-video-amdgpu vulkan-tools mesa-utils libva-utils libva-vdpau-driver libvdpau-va-gl git xorg-server xorg-xinit xorg-xrdb xorg-xinput numlockx xbindkeys i3-gaps i3status i3lock nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit wezterm xdg-utils man-db man-pages nnn htop zip unzip p7zip ufw lshw usbutils smartmontools exfatprogs bc openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins gimp torsocks python python-pip inetutils fuse3 imagemagick ffmpeg libjpeg-turbo texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science texlive-xetex ttf-dejavu
 
 modprobe fuse
 
