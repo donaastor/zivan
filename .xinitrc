@@ -16,9 +16,9 @@ xset r rate 200 30
 numlockx &
 xbindkeys &
 (sleep 1.5 && /opt/kbswtb) &
-if ! pgrep -f xidlehook; then
-  xidlehook --timer 600 'systemctl suspend -i' '' &
-fi
+# if ! pgrep -f xidlehook; then
+#   xidlehook --timer 600 'systemctl suspend -i' '' &
+# fi
 picom &
 export QT_SCREEN_SCALE_FACTORS=1.5
 nitrogen --restore &
