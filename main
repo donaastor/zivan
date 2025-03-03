@@ -141,7 +141,8 @@ cd /tmp
 git clone https://github.com/donaastor/zivan.git
 cd zivan
 7z x geany.7z
-chown -R USERNAME:wheel .xinitrc poz.jpg .xbindkeysrc config status_script.sh i3status geany
+7z x librewolf.7z
+chown -R USERNAME:wheel .xinitrc poz.jpg .xbindkeysrc config status_script.sh i3status geany librewolf-base
 chmod 755 gpu_mclk gpu_fan cppc ejex numlock status_script.sh
 
 sudo -u USERNAME bash
@@ -213,6 +214,7 @@ mv config i3status status_script.sh /home/USERNAME/.config/i3/
 mv local.conf /etc/fonts/
 mv cppc ejex /usr/local/bin/
 mv geany /home/USERNAME/.config/geany-base
+mv librewolf-base /home/USERNAME/
 ln -s /tmp/geany-conf /home/USERNAME/.config/geany
 mv libfm.conf /home/USERNAME/.config/libfm/
 ln -s /tmp/librewolf-data/profile /home/USERNAME/.librewolf
