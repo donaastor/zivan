@@ -6,6 +6,11 @@ if ! [ -d /tmp/geany-conf ]; then
   cp -r /home/usernm/.config/geany-base/* /tmp/geany-conf/
 fi
 
+if ! [ -d /tmp/librewolf-data ]; then
+  mkdir /tmp/librewolf-data{,/cache,/profile}
+  cp -r /home/usernm/librewolf-base/* /tmp/librewolf-data/profile/
+fi
+
 mkdir -p /tmp/zathura-data
 
 if [ -z "${DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
