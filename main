@@ -49,9 +49,10 @@ mount -o defaults,noatime "PART_1" /mnt/efi
 
 pacman -Syy
 pacman -S --noconfirm archlinux-keyring
-rm -rf /mnt/var/cache/pacman/pkg/*
+mkdir -p /mnt/var/cache/pacman/pkg
 mount -t tmpfs tmpfs -o defaults,size=2560M /mnt/var/cache/pacman/pkg
 pacstrap /mnt base linux linux-firmware
+rm -rf /mnt/var/cache/pacman/pkg/*
 mkdir /mnt/root/tren
 mount -t tmpfs tmpfs -o defaults,size=128M /mnt/root/tren
 genfstab -U /mnt >> /mnt/root/tren/fstab
@@ -95,7 +96,7 @@ cat fstabx >> fstab
 cp fstab /etc/
 
 cd /home/USERNAME
-sudo -u USERNAME mkdir -p tren media docs .cargo .config{,/nitrogen,/i3,/libfm} .cache .local{,/share} .cache/{fontconfig,mesa_shader_cache,pip,thumbnails,babl}
+sudo -u USERNAME mkdir -p tren media docs .cargo .config{,/nitrogen,/i3,/libfm} .cache .local{,/share} .cache/{fontconfig,mesa_shader_cache,mesa_shader_cache_db,pip,thumbnails,babl}
 cd /tmp
 
 EDIT /etc/systemd/journald.conf:
@@ -122,7 +123,7 @@ EDIT /etc/systemd/system/getty@tty1.service.d/autologin.conf:
 
 exit
 
-EDIT /etc/resolv.conf:
+EDIT /mnt/etc/resolv.conf:
 	nameserver 80.67.169.40
 	nameserver 80.67.169.12
 	nameserver 217.182.198.203
@@ -132,7 +133,7 @@ reboot
 
 timedatectl set-ntp true
 
-pacman -S --needed linux-headers dkms mesa libglvnd libva xf86-video-amdgpu vulkan-tools mesa-utils libva-utils libva-vdpau-driver libvdpau-va-gl git xorg-server xorg-xinit xorg-xrdb xorg-xinput numlockx xbindkeys i3-gaps i3status i3lock nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit wezterm xdg-utils man-db man-pages nnn htop zip unzip p7zip ufw lshw usbutils smartmontools exfatprogs bc openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins gimp torsocks python python-pip inetutils fuse3 imagemagick ffmpeg libjpeg-turbo texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science texlive-xetex ttf-dejavu udisks2
+pacman -S --needed linux-headers dkms mesa libglvnd libva xf86-video-amdgpu vulkan-tools mesa-utils libva-utils libva-vdpau-driver libvdpau-va-gl git xorg-server xorg-xinit xorg-xrdb xorg-xinput numlockx xbindkeys i3-gaps i3status i3lock nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit wezterm xdg-utils man-db man-pages nnn htop zip unzip p7zip ufw lshw usbutils smartmontools exfatprogs bc openssh tmux vlc feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins gimp torsocks python python-pip inetutils fuse3 imagemagick ffmpeg libjpeg-turbo texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science texlive-xetex ttf-dejavu ttf-linux-libertine udisks2
 
 modprobe fuse
 
@@ -145,7 +146,13 @@ chmod 755 gpu_mclk gpu_fan cppc ejex numlock status_script.sh
 
 sudo -u USERNAME bash
 . aur_get.sh
-aurget simplescreenrecorder xidlehook xkb-switch-i3 xkblayout-state-git zenpower3-dkms zenmonitor3-git librewolf-bin
+aurget simplescreenrecorder xidlehook xkb-switch-i3 xkblayout-state-git zenpower3-dkms zenmonitor3-git
+cd /tmp
+mkdir aurlf
+cd aurlf
+git clone https://aur.archlinux.org/librewolf-bin.git
+cd librewolf-bin
+makepkg -si
 exit
 modprobe zenpower
 
@@ -156,10 +163,12 @@ mv gpu_mclk.service gpu_fan.service /etc/systemd/system/
 systemctl enable gpu_mclk gpu_fan
 sed -i 's/usernm/USERNAME/' bashrc_suffix
 cat bashrc_suffix >> /etc/bash.bashrc
+exit
+rm /root/.bash_history /home/USERNAME/.bash_history
 
 printf "blacklist pcspkr\n" > /etc/modprobe.d/nobeep.conf
 EDIT /etc/xdg/picom.conf:
-	shadows = false;
+	shadow = false;
 	fading = false;
 cd /home/USERNAME
 EDIT as USERNAME .Xresources:
@@ -186,6 +195,12 @@ EDIT /usr/local/etc/.pythonrc:
 	import readline
 	readline.write_history_file = lambda *args: None
 
+EDIT as USERNAME /home/USERNAME/.wezterm.lua:
+	local wezterm = require 'wezterm'
+	local config = wezterm.config_builder()
+	config.hide_tab_bar_if_only_one_tab = true
+	return config
+
 cd /usr/share/icons/default
 mkdir cursors
 cd cursors
@@ -197,10 +212,11 @@ mv .xbindkeysrc /home/USERNAME/
 mv config i3status status_script.sh /home/USERNAME/.config/i3/
 mv local.conf /etc/fonts/
 mv cppc ejex /usr/local/bin/
-mv poz.jpg /home/USERNAME/media/
 mv geany /home/USERNAME/.config/geany-base
 ln -s /tmp/geany-conf /home/USERNAME/.config/geany
 mv libfm.conf /home/USERNAME/.config/libfm/
+ln -s /tmp/librewolf-data/profile /home/USERNAME/.librewolf
+ln -s /tmp/librewolf-data/cache /home/USERNAME/.cache/librewolf
 
 cppc kbswtb
 mv kbswtb /opt/
