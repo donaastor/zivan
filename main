@@ -78,6 +78,9 @@ EDIT nanorc:
 	set zap
 	set tabsize 4
 
+EDIT makepkg.conf:
+	OPTIONS=(... !debug ...)
+
 EDIT sudoers:
 	%sudo ALL=(ALL:ALL) ALL
 groupadd sudo
