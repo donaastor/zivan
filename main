@@ -136,7 +136,7 @@ reboot
 
 timedatectl set-ntp true
 
-pacman -S --needed linux-headers dkms mesa mesa-vdpau libglvnd libva xf86-video-amdgpu vulkan-tools mesa-utils libva-utils libva-vdpau-driver git xorg-server xorg-xinit xorg-xrdb xorg-xinput xorg-xwinifo numlockx xbindkeys i3-gaps i3status i3lock nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit wezterm xdg-utils man-db man-pages at nnn htop zip unzip p7zip ufw lshw usbutils smartmontools exfatprogs bc openssh tmux lsof mpv feh zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins gimp torsocks python python-pip inetutils fuse3 imagemagick ffmpeg libjpeg-turbo texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science texlive-xetex ttf-dejavu ttf-linux-libertine udisks2
+pacman -S --needed linux-headers dkms mesa mesa-vdpau libglvnd libva xf86-video-amdgpu vulkan-tools mesa-utils libva-utils libva-vdpau-driver git xorg-server xorg-xinit xorg-xrdb xorg-xinput xorg-xwinifo numlockx xbindkeys i3-gaps i3status i3lock nitrogen picom pipewire pipewire-pulse pipewire-jack wireplumber rtkit wezterm xdg-utils man-db man-pages at nnn htop zip unzip p7zip ufw lshw usbutils smartmontools exfatprogs bc openssh tmux lsof mpv feh qpdf zathura zathura-djvu zathura-pdf-poppler flameshot calc geany geany-plugins gimp torsocks python python-pip inetutils fuse3 imagemagick ffmpeg libjpeg-turbo texlive-core texlive-formatsextra texlive-langcyrillic texlive-latexextra texlive-science texlive-xetex ttf-dejavu ttf-linux-libertine udisks2
 
 modprobe fuse
 
