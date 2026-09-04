@@ -21,5 +21,5 @@ xbindkeys &
 # fi
 picom &
 export QT_SCREEN_SCALE_FACTORS=1.5
-nitrogen --restore &
+feh --no-fehbg --bg-fill ~/media/poz.jpg
 exec i3
